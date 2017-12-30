@@ -4,6 +4,50 @@ This demo shows how to trace the lexer tokens that are fed to the parser. Whenev
 trying to understand why the parser does not work as expected it is helpful to understand
 what is happening in the background.
 
+## Adding the trace feature
+
+##### Adding tracing to unit test
+
+These are the basic changes to the base implementation of the `Hello World` grammar.
+
+1.  Create classes inheriting from `InternalLexertraceLexer`. Unfortunately Xtext creates two
+    similar classes, one in the language plugin and another one in the ide plugin.
+2.  After providing the same constructors as the superclass you need to override the method
+    `nextToken`. This method provides the next token from the character stream to the parser.
+    An implementation detail is, that Xtext/Antlr just provide CommonTokens although the 
+    implementation is based on the token interface. A simple cast can fix that the debug output
+    can provide information about the line and the character position in the line.
+3.  TokenMapper uses a generated file to translate the integer token types to a readable format.
+4.  Since there are two `InternalLexertraceLexer` classes to override I put the
+    utility functions in an interface with default methods. Not the designated use of an
+    interface but I prefer that to Util classes.
+5.  Register the new `CustomLexer` and `CustomIdeLexer` classes in the Guice runtime
+    modules `LexertraceRuntimeModule`, `LexertraceIdeModule`, and 
+    `LexertraceUiModule` to be created instead of the `InternalLexertraceLexer` 
+    classes
+ 
+ The unit test now yields (don't forget the log4j.properties in the tests plugin):
+
+	0    [main] DEBUG org.example.xtext.lexertrace.addon.TraceLexer.debugToken  - [@-1,0:4='Hello',<'Hello'>,1:0]
+	0    [main] DEBUG org.example.xtext.lexertrace.addon.TraceLexer.debugToken  - [@-1,6:10='Xtext',<RULE_ID>,1:6]
+	0    [main] DEBUG org.example.xtext.lexertrace.addon.TraceLexer.debugToken  - [@-1,11:11='!',<T__12>,1:11]
+	0    [main] DEBUG org.example.xtext.lexertrace.addon.TraceLexer.debugToken  - [@-1,0:0='<no text>',<-1>,0:-1]
+	16   [main] DEBUG org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser.parse  - Parsing took: 15 ms
+	16   [main] DEBUG org.eclipse.xtext.linking.impl.AbstractCleaningLinker.linkModel  - beforeModelLinked took: 0ms
+	31   [main] DEBUG org.eclipse.xtext.linking.impl.AbstractCleaningLinker.linkModel  - doLinkModel took: 0ms
+	31   [main] DEBUG org.eclipse.xtext.linking.impl.AbstractCleaningLinker.linkModel  - afterModelLinked took: 0ms
+
+##### Adding tracing to eclipse runtime workbench
+
+The Xtext SDK provides a logging plugin: `org.eclipse.xtext.logging`. This plugin sets the logging
+level of classes staring with `org.eclipse.xtext` to debug. Creating the logger in `TraceLexer` and
+`TokenMapper` with a string starting with the same characters addes the trace output from `CustomLexer`
+and `CustomIdeLexer` to the console output.
+
+Additionally to your own lexer output you can find trace output from Xtext as well. I found this information
+very helpful to understand how the editor works and where to put other extensions in place to modify the
+lexer with customized synthetic terminals. 
+
 ## Building the example project
 
 I use Eclipse as my IDE. I added some launch configurations to the project to simplify using
@@ -14,6 +58,8 @@ After that you can use the preconfigured launch configurations:
 
 * `lexertrace - Generate Language Infrastructure` 
   to generate the Xtext artifacts making up the language
+* `lexertrace - unit test`
+  to launch the JUnit test on the tests plugin
 * `lexertrace - Launch Runtime Eclipse`
   to launch the Eclipse Runtime to test the language
 * `lexertrace - mvn clean`

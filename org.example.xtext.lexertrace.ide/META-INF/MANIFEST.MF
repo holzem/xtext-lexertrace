@@ -10,6 +10,7 @@ Require-Bundle: org.example.xtext.lexertrace,
  org.eclipse.xtext.xbase.ide,
  org.antlr.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.example.xtext.lexertrace.ide.contentassist.antlr.internal,
- org.example.xtext.lexertrace.ide.contentassist.antlr
+Export-Package: org.example.xtext.lexertrace.ide.addon,
+ org.example.xtext.lexertrace.ide.contentassist.antlr,
+ org.example.xtext.lexertrace.ide.contentassist.antlr.internal
 

@@ -3,9 +3,17 @@
  */
 package org.example.xtext.lexertrace.ide
 
+import com.google.inject.Binder
+import com.google.inject.name.Names
+import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.Lexer
+import org.example.xtext.lexertrace.ide.addon.CustomIdeLexer
 
 /**
- * Use this class to register ide components.
+ * Use {@link CustomIdeLexer} instead of {@link InternalLexertraceLexer}
  */
 class LexertraceIdeModule extends AbstractLexertraceIdeModule {
-}
+	// use CustomIdeLexer instead of InternalLexertraceLexer
+	override configureContentAssistLexer(Binder binder) {
+		binder.bind(typeof(Lexer)).annotatedWith(Names.named(org.eclipse.xtext.ide.LexerIdeBindings.CONTENT_ASSIST)).to(
+			typeof(CustomIdeLexer));
+	}}

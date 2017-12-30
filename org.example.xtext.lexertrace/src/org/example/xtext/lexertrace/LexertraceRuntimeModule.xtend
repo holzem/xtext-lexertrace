@@ -3,9 +3,33 @@
  */
 package org.example.xtext.lexertrace
 
+import org.example.xtext.lexertrace.addon.CustomLexer
+import org.eclipse.xtext.parser.antlr.Lexer
+import com.google.inject.Provider
+import org.example.xtext.lexertrace.parser.antlr.internal.InternalLexertraceLexer
+import org.eclipse.xtext.parser.antlr.LexerProvider
+import com.google.inject.Binder
+import com.google.inject.name.Names
+import org.eclipse.xtext.parser.antlr.LexerBindings
 
 /**
- * Use this class to register components to be used at runtime / without the Equinox extension registry.
+ * Use the {@link CustomLexer} instead of {@link InternalLexertraceLexer}.
  */
 class LexertraceRuntimeModule extends AbstractLexertraceRuntimeModule {
+	// use CustomLexer instead of InternalLexertraceLexer
+	override Class<? extends Lexer> bindLexer() {
+		return typeof(CustomLexer);
+	}
+
+	// use CustomLexer instead of InternalLexertraceLexer
+	override Provider<? extends InternalLexertraceLexer> provideInternalLexertraceLexer() {
+		return LexerProvider.create(typeof(CustomLexer));
+	}
+	
+	// use CustomLexer instead of InternalLexertraceLexer
+	override void configureRuntimeLexer(Binder binder) {
+		binder.bind(typeof(Lexer))
+			.annotatedWith(Names.named(LexerBindings.RUNTIME))
+			.to(typeof(CustomLexer));
+	}
 }

@@ -15,15 +15,16 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.emf.common,
  org.eclipse.xtend.lib;bundle-version="2.13.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.example.xtext.lexertrace.parser.antlr,
- org.example.xtext.lexertrace.scoping,
+Export-Package: org.example.xtext.lexertrace,
+ org.example.xtext.lexertrace.addon,
  org.example.xtext.lexertrace.generator,
- org.example.xtext.lexertrace,
- org.example.xtext.lexertrace.services,
  org.example.xtext.lexertrace.lexertrace,
- org.example.xtext.lexertrace.lexertrace.util,
- org.example.xtext.lexertrace.validation,
  org.example.xtext.lexertrace.lexertrace.impl,
+ org.example.xtext.lexertrace.lexertrace.util,
+ org.example.xtext.lexertrace.parser.antlr,
  org.example.xtext.lexertrace.parser.antlr.internal,
- org.example.xtext.lexertrace.serializer
+ org.example.xtext.lexertrace.scoping,
+ org.example.xtext.lexertrace.serializer,
+ org.example.xtext.lexertrace.services,
+ org.example.xtext.lexertrace.validation
 Import-Package: org.apache.log4j

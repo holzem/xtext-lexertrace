@@ -3,11 +3,38 @@
  */
 package org.example.xtext.lexertrace.ui
 
+import com.google.inject.Binder
+import com.google.inject.name.Names
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
+import org.eclipse.xtext.ide.LexerIdeBindings
+import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.Lexer
+import org.eclipse.xtext.parser.antlr.LexerProvider
+import org.eclipse.xtext.ui.editor.model.BacktrackingLexerDocumentTokenSource
+import org.eclipse.xtext.ui.editor.model.DocumentPartitioner
+import org.eclipse.xtext.ui.editor.model.DocumentTokenSource
+import org.example.xtext.lexertrace.ide.addon.CustomIdeLexer
+import org.example.xtext.lexertrace.addon.CustomLexer
 
 /**
- * Use this class to register components to be used within the Eclipse IDE.
+ * Use {@link CustomIdeLexer} instead of {@link InternalLexertraceLexer}
+ * Use {@link Lexer} instead of {@link InternalLexertraceLexer}
  */
 @FinalFieldsConstructor
 class LexertraceUiModule extends AbstractLexertraceUiModule {
+	// use CustomIdeLexer instead of InternalLexertraceLexer
+	override void configureContentAssistLexer(Binder pBinder) {
+		pBinder.bind(typeof(Lexer)).annotatedWith(Names.named(LexerIdeBindings.CONTENT_ASSIST)).to(
+			typeof(CustomIdeLexer));
+	}
+
+	// use CustomIdeLexer instead of InternalLexertraceLexer
+	override void configureContentAssistLexerProvider(Binder pBinder) {
+		pBinder.bind(typeof(CustomIdeLexer)).toProvider(LexerProvider.create(typeof(CustomIdeLexer)));
+	}
+
+	// use CustomLexer instead of InternalLexertraceLexer
+	override void configureHighlightingLexer(Binder pBinder) {
+		pBinder.bind(typeof(org.eclipse.xtext.parser.antlr.Lexer)).annotatedWith(
+			Names.named(LexerIdeBindings.HIGHLIGHTING)).to(typeof(CustomLexer));
+	}
 }
