@@ -1,0 +1,9 @@
+grammar org.example.xtext.lexertrace.Lexertrace with org.eclipse.xtext.common.Terminals
+
+generate lexertrace "http://www.example.org/xtext/lexertrace/Lexertrace"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';

@@ -1,3 +1,8 @@
+/*/src-gen
+/*/xtend-gen
+/*/bin
+/*/target
+
 # Compiled class file
 *.class
 
